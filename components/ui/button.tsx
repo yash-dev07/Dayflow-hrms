@@ -7,14 +7,14 @@ const buttonVariants = cva(
   {
     variants: {
       variant: {
-        default: 'bg-indigo-600 text-white hover:bg-indigo-700 active:scale-[0.98] shadow-sm',
-        destructive: 'bg-red-500 text-white hover:bg-red-600 shadow-sm',
-        outline: 'border border-gray-200 bg-white text-gray-700 hover:bg-gray-50 hover:border-gray-300',
-        secondary: 'bg-gray-100 text-gray-900 hover:bg-gray-200',
-        ghost: 'hover:bg-gray-100 text-gray-700',
-        link: 'text-indigo-600 underline-offset-4 hover:underline',
-        success: 'bg-emerald-600 text-white hover:bg-emerald-700 shadow-sm',
-        warning: 'bg-amber-500 text-white hover:bg-amber-600 shadow-sm',
+        default: 'btn-3d text-white hover:bg-indigo-700 active:scale-[0.98] shadow-sm',
+        destructive: 'btn-3d !from-rose-500 !to-rose-700 text-white shadow-sm',
+        outline: 'border border-border bg-card/50 hover:bg-muted text-foreground backdrop-blur-md shadow-sm',
+        secondary: 'bg-muted text-foreground hover:bg-muted/80 backdrop-blur-md',
+        ghost: 'hover:bg-muted text-muted-foreground hover:text-foreground',
+        link: 'text-indigo-400 underline-offset-4 hover:underline',
+        success: 'btn-3d !from-emerald-500 !to-emerald-700 text-white shadow-sm',
+        warning: 'btn-3d !from-amber-500 !to-amber-700 text-white shadow-sm',
       },
       size: {
         default: 'h-10 px-4 py-2',

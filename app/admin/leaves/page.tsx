@@ -57,10 +57,11 @@ export default function AdminLeavesPage() {
     if (!reviewingId) return
     setIsReviewing(true)
     try {
-      const res = await fetch(`/api/leaves/${reviewingId}`, {
+      const actionPath = reviewAction.toLowerCase()
+      const res = await fetch(`/api/leaves/${reviewingId}/${actionPath}`, {
         method: 'PATCH',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ status: reviewAction, hrComment }),
+        body: JSON.stringify({ hrComment }),
       })
       const data = await res.json()
       if (!res.ok) { toast({ title: 'Error', description: data.error, variant: 'destructive' }); return }
@@ -112,7 +113,7 @@ export default function AdminLeavesPage() {
             key={tab.value}
             onClick={() => { setStatusFilter(tab.value); setIsLoading(true) }}
             className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
-              statusFilter === tab.value ? 'bg-white text-gray-900 shadow-sm' : 'text-gray-600 hover:text-gray-900'
+              statusFilter === tab.value ? 'bg-background text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             {tab.label}

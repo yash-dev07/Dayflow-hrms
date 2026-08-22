@@ -7,6 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
+import { formatCurrency } from '@/lib/utils'
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter } from '@/components/ui/dialog'
 import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
@@ -29,7 +30,7 @@ interface Employee {
     joiningDate: string | null
     profilePicture: string | null
   } | null
-  salaryStructure: { netSalary: number } | null
+  salaryStructures: { netSalary: number }[]
 }
 
 const DEPARTMENTS = ['Engineering', 'Human Resources', 'Finance', 'Marketing', 'Sales', 'Operations']
@@ -165,7 +166,7 @@ export default function AdminEmployeesPage() {
                     <th className="text-left text-xs font-medium text-gray-500 py-3 px-6">Employee</th>
                     <th className="text-left text-xs font-medium text-gray-500 py-3 px-4">Department</th>
                     <th className="text-left text-xs font-medium text-gray-500 py-3 px-4">Role</th>
-                    <th className="text-left text-xs font-medium text-gray-500 py-3 px-4">Joined</th>
+                    <th className="text-left text-xs font-medium text-gray-500 py-3 px-4">Salary</th>
                     <th className="text-left text-xs font-medium text-gray-500 py-3 px-4">Status</th>
                     <th className="text-left text-xs font-medium text-gray-500 py-3 px-4">Actions</th>
                   </tr>
@@ -198,8 +199,8 @@ export default function AdminEmployeesPage() {
                             {emp.role}
                           </Badge>
                         </td>
-                        <td className="py-3 px-4 text-sm text-gray-700">
-                          {emp.profile?.joiningDate ? formatDate(emp.profile.joiningDate) : '—'}
+                        <td className="px-4 py-3 text-sm text-gray-500">
+                          {formatCurrency(emp.salaryStructures?.[0]?.netSalary ?? 0)}
                         </td>
                         <td className="py-3 px-4">
                           <Badge variant={emp.isActive ? 'success' : 'secondary'}>

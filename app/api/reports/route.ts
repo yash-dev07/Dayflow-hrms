@@ -43,9 +43,9 @@ export async function GET(request: NextRequest) {
       }),
       // Monthly payroll trend (last 6 months)
       prisma.payrollRecord.groupBy({
-        by: ['month', 'year'],
+        by: ['payrollPeriodId'],
         _sum: { netSalary: true },
-        orderBy: [{ year: 'desc' }, { month: 'desc' }],
+        orderBy: { payrollPeriodId: 'desc' },
         take: 6
       }),
     ])

@@ -1,9 +1,9 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { getTokenFromRequest } from '@/lib/auth'
+import { verifyTokenEdge, COOKIE_NAME } from '@/lib/auth'
 
 const publicPaths = ['/login', '/signup', '/forgot-password', '/reset-password', '/']
 
-export function middleware(request: NextRequest) {
+export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl
   
   // Allow public paths
@@ -11,7 +11,8 @@ export function middleware(request: NextRequest) {
     return NextResponse.next()
   }
 
-  const session = getTokenFromRequest(request)
+  const token = request.cookies.get(COOKIE_NAME)?.value
+  const session = token ? await verifyTokenEdge(token) : null
   
   // Redirect to login if no session
   if (!session) {

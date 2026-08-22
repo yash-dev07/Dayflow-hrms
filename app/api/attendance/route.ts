@@ -14,16 +14,37 @@ export async function GET(request: NextRequest) {
     const page = parseInt(searchParams.get('page') ?? '1')
     const limit = parseInt(searchParams.get('limit') ?? '30')
 
-    // Employees can only see their own attendance
-    const targetEmployeeId = ['ADMIN', 'HR'].includes(session.role) && employeeId
-      ? employeeId
-      : session.userId
+    const all = searchParams.get('all') === 'true'
+    const isAdmin = ['ADMIN', 'HR'].includes(session.role)
 
-    const where: Record<string, unknown> = { employeeId: targetEmployeeId }
+    // Employees can only see their own attendance
+    // Admin/HR can see specific employee, or all if all=true
+    let where: Record<string, unknown> = {}
+    
+    if (!isAdmin) {
+      where.employeeId = session.userId
+    } else if (employeeId) {
+      where.employeeId = employeeId
+    } else if (!all) {
+      where.employeeId = session.userId
+    }
+
     if (startDate || endDate) {
       where.date = {}
       if (startDate) (where.date as Record<string, Date>).gte = new Date(startDate)
       if (endDate) (where.date as Record<string, Date>).lte = new Date(endDate)
+    }
+
+    // Support single date filtering (from admin page)
+    const exactDate = searchParams.get('date')
+    if (exactDate) {
+      where.date = new Date(exactDate)
+    }
+
+    // Support status filter
+    const status = searchParams.get('status')
+    if (status) {
+      where.status = status
     }
 
     const [records, total] = await Promise.all([

@@ -14,6 +14,11 @@ export async function PATCH(
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
 
+    const userId = session.userId || (session as any).id
+    if (!userId) {
+      return NextResponse.json({ error: 'Invalid token payload' }, { status: 401 })
+    }
+
     const { id, action } = await params
     if (!['approve', 'reject'].includes(action)) {
       return NextResponse.json({ error: 'Invalid action' }, { status: 400 })
@@ -43,7 +48,7 @@ export async function PATCH(
       data: {
         status: newStatus,
         hrComment,
-        reviewedBy: session.userId,
+        reviewedBy: userId,
         reviewedAt: new Date(),
       }
     })
@@ -83,7 +88,7 @@ export async function PATCH(
 
     await prisma.activityLog.create({
       data: {
-        actorId: session.userId,
+        actorId: userId,
         action: `LEAVE_${newStatus}`,
         targetId: leaveRequest.employeeId,
         targetType: 'LEAVE_REQUEST',

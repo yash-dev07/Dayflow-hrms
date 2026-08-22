@@ -45,7 +45,7 @@ export async function GET(request: NextRequest) {
           isActive: true,
           createdAt: true,
           profile: true,
-          salaryStructure: { select: { netSalary: true } },
+          salaryStructures: { select: { netSalary: true }, take: 1, orderBy: { effectiveFrom: 'desc' } },
         },
         orderBy: { createdAt: 'desc' },
         skip: (page - 1) * limit,
@@ -104,7 +104,7 @@ export async function POST(request: NextRequest) {
             employmentType,
           }
         },
-        salaryStructure: {
+        salaryStructures: {
           create: {
             basicSalary: 0,
             hra: 0,

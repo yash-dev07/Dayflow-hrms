@@ -25,7 +25,7 @@ export async function GET(
         isActive: true,
         createdAt: true,
         profile: true,
-        salaryStructure: true,
+        salaryStructures: { take: 1, orderBy: { effectiveFrom: 'desc' } },
         documents: true,
         attendance: { orderBy: { date: 'desc' }, take: 30 },
         leaveRequests: {
@@ -33,7 +33,7 @@ export async function GET(
           take: 10,
           include: { leaveType: true }
         },
-        payrollRecords: { orderBy: [{ year: 'desc' }, { month: 'desc' }], take: 12 },
+        payrollRecords: { orderBy: { createdAt: 'desc' }, take: 6 },
       }
     })
 

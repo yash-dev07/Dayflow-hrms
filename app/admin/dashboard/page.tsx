@@ -85,9 +85,9 @@ export default function AdminDashboard() {
     )
   }
 
-  const userName = userInfo?.user.profile
+  const userName = userInfo?.user?.profile
     ? `${userInfo.user.profile.firstName} ${userInfo.user.profile.lastName}`
-    : userInfo?.user.email ?? 'Admin'
+    : userInfo?.user?.email ?? 'Admin'
 
   const s = stats?.stats
 
@@ -135,13 +135,13 @@ export default function AdminDashboard() {
       {/* KPI Cards */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
         {[
-          { label: 'Total Employees', value: s?.totalEmployees ?? 0, icon: Users, gradient: 'from-indigo-500 to-indigo-600', suffix: '' },
-          { label: 'Present Today', value: s?.presentToday ?? 0, icon: UserCheck, gradient: 'from-emerald-500 to-emerald-600', suffix: '' },
-          { label: 'On Leave', value: s?.onLeaveToday ?? 0, icon: Clock, gradient: 'from-blue-500 to-blue-600', suffix: '' },
-          { label: 'Pending Leaves', value: s?.pendingLeaveRequests ?? 0, icon: AlertCircle, gradient: 'from-amber-500 to-amber-600', suffix: '' },
-          { label: 'Monthly Payroll', value: s?.totalPayroll ?? 0, icon: TrendingUp, gradient: 'from-violet-500 to-violet-600', isCurrency: true },
+          { label: 'Total Employees', value: s?.totalEmployees ?? 0, icon: Users, bgClass: 'bg-indigo-500', suffix: '' },
+          { label: 'Present Today', value: s?.presentToday ?? 0, icon: UserCheck, bgClass: 'bg-emerald-500', suffix: '' },
+          { label: 'On Leave', value: s?.onLeaveToday ?? 0, icon: Clock, bgClass: 'bg-blue-500', suffix: '' },
+          { label: 'Pending Leaves', value: s?.pendingLeaveRequests ?? 0, icon: AlertCircle, bgClass: 'bg-amber-500', suffix: '' },
+          { label: 'Monthly Payroll', value: s?.totalPayroll ?? 0, icon: TrendingUp, bgClass: 'bg-violet-500', isCurrency: true },
         ].map(kpi => (
-          <Card key={kpi.label} className={`border-0 shadow-sm bg-gradient-to-br ${kpi.gradient} text-white card-hover`}>
+          <Card key={kpi.label} className={`border-0 shadow-sm ${kpi.bgClass} text-white card-hover`}>
             <CardContent className="p-4">
               <div className="flex items-center justify-between mb-3">
                 <p className="text-white/70 text-xs font-medium">{kpi.label}</p>
@@ -167,10 +167,11 @@ export default function AdminDashboard() {
             <ResponsiveContainer width="100%" height={220}>
               <BarChart data={attendanceChartData} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
                 <CartesianGrid strokeDasharray="3 3" stroke="#f0f0f0" />
-                <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#6b7280' }} />
-                <YAxis tick={{ fontSize: 12, fill: '#6b7280' }} />
+                <XAxis dataKey="name" tick={{ fontSize: 12, fill: '#9ca3af' }} />
+                <YAxis tick={{ fontSize: 12, fill: '#9ca3af' }} />
                 <Tooltip
-                  contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
+                  contentStyle={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(20,20,30,0.85)', backdropFilter: 'blur(12px)', color: '#fff' }}
+                  itemStyle={{ color: '#fff' }}
                 />
                 <Bar dataKey="count" radius={[6, 6, 0, 0]}>
                   {attendanceChartData.map((entry, index) => (
@@ -205,13 +206,14 @@ export default function AdminDashboard() {
                     ))}
                   </Pie>
                   <Tooltip
-                    contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 20px rgba(0,0,0,0.1)' }}
-                    formatter={(value: number) => [`${value} employees`, '']}
+                    contentStyle={{ borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', background: 'rgba(20,20,30,0.85)', backdropFilter: 'blur(12px)', color: '#fff' }}
+                    itemStyle={{ color: '#fff' }}
+                    formatter={(value: any) => [`₹${value.toLocaleString()}`, 'Amount']}
                   />
                   <Legend
                     iconType="circle"
                     iconSize={8}
-                    formatter={(value) => <span style={{ fontSize: '11px', color: '#6b7280' }}>{value}</span>}
+                    formatter={(value) => <span style={{ fontSize: '11px', color: '#9ca3af' }}>{value}</span>}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -226,28 +228,28 @@ export default function AdminDashboard() {
 
       {/* Quick Stats Row */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <Card className="border-0 shadow-sm">
+        <Card className="border-0 shadow-sm glass-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-red-50 rounded-xl flex items-center justify-center">
-                <Users className="w-5 h-5 text-red-500" />
+              <div className="w-10 h-10 bg-red-500/20 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(239,68,68,0.2)]">
+                <Users className="w-5 h-5 text-red-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Absent Today</p>
-                <p className="text-xl font-bold text-gray-900">{s?.absentToday ?? 0}</p>
+                <p className="text-xs text-gray-400">Absent Today</p>
+                <p className="text-xl font-bold text-foreground">{s?.absentToday ?? 0}</p>
               </div>
             </div>
           </CardContent>
         </Card>
-        <Card className="border-0 shadow-sm">
+        <Card className="border-0 shadow-sm glass-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
-                <TrendingUp className="w-5 h-5 text-emerald-500" />
+              <div className="w-10 h-10 bg-emerald-500/20 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(16,185,129,0.2)]">
+                <TrendingUp className="w-5 h-5 text-emerald-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Attendance Rate</p>
-                <p className="text-xl font-bold text-gray-900">
+                <p className="text-xs text-gray-400">Attendance Rate</p>
+                <p className="text-xl font-bold text-foreground">
                   {s?.totalEmployees
                     ? Math.round((s.presentToday / s.totalEmployees) * 100)
                     : 0}%
@@ -256,15 +258,15 @@ export default function AdminDashboard() {
             </div>
           </CardContent>
         </Card>
-        <Card className="border-0 shadow-sm">
+        <Card className="border-0 shadow-sm glass-card">
           <CardContent className="p-4">
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
-                <AlertCircle className="w-5 h-5 text-amber-500" />
+              <div className="w-10 h-10 bg-amber-500/20 rounded-xl flex items-center justify-center shadow-[0_0_15px_rgba(245,158,11,0.2)]">
+                <AlertCircle className="w-5 h-5 text-amber-400" />
               </div>
               <div>
-                <p className="text-xs text-gray-500">Leaves Need Review</p>
-                <p className="text-xl font-bold text-gray-900">{s?.pendingLeaveRequests ?? 0}</p>
+                <p className="text-xs text-gray-400">Leaves Need Review</p>
+                <p className="text-xl font-bold text-foreground">{s?.pendingLeaveRequests ?? 0}</p>
               </div>
             </div>
           </CardContent>
@@ -283,20 +285,19 @@ export default function AdminDashboard() {
           {(stats?.recentActivities ?? []).length === 0 ? (
             <div className="py-12 text-center text-gray-400">No recent activity</div>
           ) : (
-            <div className="divide-y divide-gray-50">
+            <div className="divide-y divide-border">
               {stats?.recentActivities.slice(0, 8).map(activity => (
-                <div key={activity.id} className="flex gap-3 px-6 py-3 hover:bg-gray-50 transition-colors">
-                  <div className="flex-shrink-0 w-1.5 h-1.5 bg-indigo-400 rounded-full mt-2" />
+                <div key={activity.id} className="flex gap-3 px-6 py-3 hover:bg-muted transition-colors">
+                  <div className="flex-shrink-0 w-1.5 h-1.5 bg-indigo-400 rounded-full mt-2 shadow-[0_0_10px_rgba(99,102,241,0.8)]" />
                   <div className="flex-1 min-w-0">
-                    <p className="text-sm font-medium text-gray-900">{getActionLabel(activity.action)}</p>
+                    <p className="text-sm font-medium text-foreground">{getActionLabel(activity.action)}</p>
                     {activity.details && (
-                      <p className="text-xs text-gray-500 mt-0.5 truncate">{activity.details}</p>
+                      <p className="text-xs text-gray-400 mt-0.5 truncate">{activity.details}</p>
                     )}
-                    <p className="text-xs text-gray-400 mt-0.5">
-                      by {activity.actor.profile
+                    <p className="text-xs text-gray-500 mt-0.5">
+                      by <span className="text-indigo-300">{activity.actor.profile
                         ? `${activity.actor.profile.firstName} ${activity.actor.profile.lastName}`
-                        : activity.actor.employeeId
-                      } · {formatDate(activity.createdAt, 'MMM dd, hh:mm a')}
+                        : activity.actor.employeeId}</span> · {formatDate(activity.createdAt, 'MMM dd, hh:mm a')}
                     </p>
                   </div>
                 </div>

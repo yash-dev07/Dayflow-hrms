@@ -32,7 +32,7 @@ export async function GET(request: NextRequest) {
       prisma.attendance.count({ where: { date: today, status: 'LEAVE' } }),
       prisma.leaveRequest.count({ where: { status: 'PENDING' } }),
       prisma.payrollRecord.aggregate({
-        where: { month: currentMonth, year: currentYear },
+        where: { payrollPeriod: { month: currentMonth, year: currentYear }, status: 'PAID' },
         _sum: { netSalary: true }
       }),
       prisma.activityLog.findMany({
@@ -63,7 +63,7 @@ export async function GET(request: NextRequest) {
         presentToday,
         onLeaveToday,
         pendingLeaveRequests,
-        totalPayroll: totalPayroll._sum.netSalary ?? 0,
+        payroll: totalPayroll._sum?.netSalary ?? 0,
         absentToday: totalEmployees - presentToday - onLeaveToday,
       },
       recentActivities,

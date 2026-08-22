@@ -83,7 +83,7 @@ export default function EmployeeAttendancePage() {
       </div>
 
       {/* Today's attendance card */}
-      <Card className="border-0 shadow-sm bg-gradient-to-br from-gray-900 to-indigo-950 text-white">
+      <Card className="border-0 shadow-sm bg-indigo-950 text-white">
         <CardContent className="p-6">
           <div className="flex items-center justify-between mb-6">
             <div>

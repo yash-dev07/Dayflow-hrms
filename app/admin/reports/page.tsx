@@ -83,7 +83,7 @@ export default function AdminReportsPage() {
         <select
           value={dateRange}
           onChange={e => setDateRange(e.target.value)}
-          className="h-10 rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-40"
+          className="h-10 rounded-lg border border-border bg-background px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 w-40"
         >
           <option value="7">Last 7 Days</option>
           <option value="30">Last 30 Days</option>
@@ -95,7 +95,7 @@ export default function AdminReportsPage() {
 
       {/* Summary Stats */}
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-        <Card className="border-0 shadow-sm bg-gradient-to-br from-indigo-500 to-indigo-600 text-white">
+        <Card className="border-0 shadow-sm bg-indigo-500 text-white">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-3">
               <p className="text-indigo-200 text-xs font-medium">Total Payroll</p>
@@ -110,7 +110,7 @@ export default function AdminReportsPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-sm bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
+        <Card className="border-0 shadow-sm bg-emerald-500 text-white">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-3">
               <p className="text-emerald-200 text-xs font-medium">Total Leave Days</p>
@@ -125,7 +125,7 @@ export default function AdminReportsPage() {
           </CardContent>
         </Card>
 
-        <Card className="border-0 shadow-sm bg-gradient-to-br from-amber-500 to-amber-600 text-white">
+        <Card className="border-0 shadow-sm bg-amber-500 text-white">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-3">
               <p className="text-amber-200 text-xs font-medium">Leave Requests</p>
@@ -182,7 +182,7 @@ export default function AdminReportsPage() {
                   <YAxis tick={{ fontSize: 12, fill: '#6b7280' }} tickFormatter={(val) => `₹${val/1000}k`} />
                   <Tooltip 
                     contentStyle={{ borderRadius: '8px' }}
-                    formatter={(val: number) => [formatCurrency(val), 'Total']}
+                    formatter={(val: any) => [formatCurrency(val), 'Net Salary']}
                   />
                   <Line type="monotone" dataKey="total" stroke="#6366f1" strokeWidth={3} dot={{ r: 4, strokeWidth: 2 }} activeDot={{ r: 6 }} />
                 </LineChart>
@@ -210,7 +210,7 @@ export default function AdminReportsPage() {
                     outerRadius={120}
                     paddingAngle={2}
                     dataKey="value"
-                    label={({ name, percent }) => `${name} ${(percent * 100).toFixed(0)}%`}
+                    label={({ name, percent }) => `${name} ${(percent ? (percent * 100).toFixed(0) : 0)}%`}
                     labelLine={false}
                   >
                     {leaveTypesData.map((entry, index) => (

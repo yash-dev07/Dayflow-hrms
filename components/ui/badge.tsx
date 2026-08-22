@@ -3,19 +3,21 @@ import { cn } from '@/lib/utils'
 import { cva, type VariantProps } from 'class-variance-authority'
 
 const badgeVariants = cva(
-  'inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium transition-colors',
+  "inline-flex items-center rounded-full border px-2.5 py-0.5 text-xs font-semibold transition-colors focus:outline-none focus:ring-2 focus:ring-ring focus:ring-offset-2 badge",
   {
     variants: {
       variant: {
-        default: 'bg-indigo-100 text-indigo-700',
-        secondary: 'bg-gray-100 text-gray-700',
-        success: 'bg-emerald-100 text-emerald-700',
-        warning: 'bg-amber-100 text-amber-700',
-        destructive: 'bg-red-100 text-red-700',
-        blue: 'bg-blue-100 text-blue-700',
-        purple: 'bg-purple-100 text-purple-700',
-        outline: 'border border-gray-200 text-gray-700',
-      }
+        default:
+          "border-transparent bg-indigo-500/20 text-indigo-300 hover:bg-indigo-500/30 shadow-[0_0_10px_rgba(99,102,241,0.2)]",
+        secondary:
+          "border-transparent bg-muted text-foreground hover:bg-muted/80",
+        destructive:
+          "border-transparent bg-rose-500/20 text-rose-300 hover:bg-rose-500/30 shadow-[0_0_10px_rgba(244,63,94,0.2)]",
+        outline: "text-foreground",
+        success: "border-transparent bg-emerald-500/20 text-emerald-300 hover:bg-emerald-500/30 shadow-[0_0_10px_rgba(16,185,129,0.2)]",
+        warning: "border-transparent bg-amber-500/20 text-amber-300 hover:bg-amber-500/30 shadow-[0_0_10px_rgba(245,158,11,0.2)]",
+        blue: "border-transparent bg-sky-500/20 text-sky-300 hover:bg-sky-500/30 shadow-[0_0_10px_rgba(14,165,233,0.2)]",
+      },
     },
     defaultVariants: { variant: 'default' }
   }

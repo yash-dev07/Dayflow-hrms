@@ -1,9 +1,11 @@
 import jwt from 'jsonwebtoken'
+import { SignJWT, jwtVerify } from 'jose'
 import { cookies } from 'next/headers'
 import { NextRequest } from 'next/server'
 
 const JWT_SECRET = process.env.JWT_SECRET || 'fallback-secret-change-in-production'
-const COOKIE_NAME = 'dayflow_token'
+const secretKey = new TextEncoder().encode(JWT_SECRET)
+export const COOKIE_NAME = 'dayflow_token'
 
 export interface JWTPayload {
   userId: string
@@ -19,6 +21,15 @@ export function signToken(payload: JWTPayload): string {
 export function verifyToken(token: string): JWTPayload | null {
   try {
     return jwt.verify(token, JWT_SECRET) as JWTPayload
+  } catch {
+    return null
+  }
+}
+
+export async function verifyTokenEdge(token: string): Promise<JWTPayload | null> {
+  try {
+    const { payload } = await jwtVerify(token, secretKey)
+    return payload as unknown as JWTPayload
   } catch {
     return null
   }

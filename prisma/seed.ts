@@ -1,4 +1,4 @@
-import { PrismaClient, Role, AttendanceStatus, LeaveStatus, PaymentStatus } from '@prisma/client'
+import { PrismaClient, Role, AttendanceStatus, LeaveStatus, PayrollPeriodStatus, PayrollRecordStatus } from '@prisma/client'
 import { Pool } from 'pg'
 import { PrismaPg } from '@prisma/adapter-pg'
 import bcrypt from 'bcryptjs'
@@ -44,7 +44,10 @@ async function main() {
   await prisma.activityLog.deleteMany()
   await prisma.notification.deleteMany()
   await prisma.document.deleteMany()
+  await prisma.payrollAuditLog.deleteMany()
   await prisma.payrollRecord.deleteMany()
+  await prisma.payrollPeriod.deleteMany()
+  await prisma.payrollPolicy.deleteMany()
   await prisma.salaryStructure.deleteMany()
   await prisma.leaveRequest.deleteMany()
   await prisma.attendance.deleteMany()
@@ -53,6 +56,20 @@ async function main() {
   await prisma.user.deleteMany()
 
   console.log('✅ Cleared existing data')
+
+  // Create Payroll Policy
+  await prisma.payrollPolicy.create({
+    data: {
+      workingDaysPerMonth: 26,
+      unpaidLeaveDeductionEnabled: true,
+      overtimeEnabled: false,
+      taxCalculationEnabled: false,
+      pfEnabled: false,
+      esiEnabled: false,
+      professionalTaxEnabled: false,
+    }
+  })
+  console.log('✅ Created payroll policy')
 
   // Create Leave Types
   const leaveTypes = await Promise.all([
@@ -156,7 +173,7 @@ async function main() {
           address: '42, Tech Park Colony',
         }
       },
-      salaryStructure: {
+      salaryStructures: {
         create: {
           basicSalary: 50000,
           hra: 15000,
@@ -207,7 +224,7 @@ async function main() {
             phone: `+91 ${Math.floor(Math.random() * 9000000000) + 1000000000}`,
           }
         },
-        salaryStructure: {
+        salaryStructures: {
           create: {
             basicSalary: salary,
             hra,
@@ -216,7 +233,7 @@ async function main() {
             bonuses,
             grossSalary: gross,
             netSalary: net,
-            effectiveFrom: new Date(),
+            effectiveFrom: new Date('2023-01-01'),
           }
         }
       }
@@ -320,34 +337,69 @@ async function main() {
   }
   console.log('✅ Created leave requests')
 
-  // Create payroll records (last 6 months)
-  const paymentStatuses: PaymentStatus[] = ['PAID', 'PAID', 'PAID', 'PAID', 'PAID', 'PROCESSING']
-  for (const emp of employees) {
-    const salary = await prisma.salaryStructure.findUnique({ where: { employeeId: emp.id } })
-    if (!salary) continue
+  // Create payroll periods and records (June, July, August 2026)
+  const monthsToSeed = [
+    { m: 6, y: 2026, status: 'PAID' as PayrollPeriodStatus },
+    { m: 7, y: 2026, status: 'PAID' as PayrollPeriodStatus },
+    { m: 8, y: 2026, status: 'DRAFT' as PayrollPeriodStatus }
+  ]
 
-    for (let m = 5; m >= 0; m--) {
-      const d = new Date()
-      d.setMonth(d.getMonth() - m)
-      try {
-        await prisma.payrollRecord.create({
-          data: {
-            employeeId: emp.id,
-            month: d.getMonth() + 1,
-            year: d.getFullYear(),
-            basicSalary: salary.basicSalary,
-            grossSalary: salary.grossSalary,
-            deductions: salary.deductions,
-            netSalary: salary.netSalary,
-            paymentStatus: m === 0 ? 'PROCESSING' : 'PAID',
-          }
-        })
-      } catch {
-        // Skip duplicates
+  for (const pd of monthsToSeed) {
+    const startDate = new Date(pd.y, pd.m - 1, 1)
+    const endDate = new Date(pd.y, pd.m, 0)
+    
+    const period = await prisma.payrollPeriod.create({
+      data: {
+        month: pd.m,
+        year: pd.y,
+        startDate,
+        endDate,
+        status: pd.status
       }
+    })
+
+    for (const emp of employees) {
+      const salary = await prisma.salaryStructure.findFirst({
+        where: { employeeId: emp.id },
+        orderBy: { effectiveFrom: 'desc' }
+      })
+      
+      if (!salary) continue;
+
+      const recordStatus = pd.status === 'PAID' ? 'PAID' as PayrollRecordStatus : 'GENERATED' as PayrollRecordStatus;
+
+      const unpaidLeaveDays = Math.floor(Math.random() * 2);
+      const leaveDeduction = (salary.grossSalary / 26) * unpaidLeaveDays;
+      const totalDeductions = salary.deductions + leaveDeduction;
+
+      await prisma.payrollRecord.create({
+        data: {
+          employeeId: emp.id,
+          payrollPeriodId: period.id,
+          basicSalary: salary.basicSalary,
+          hra: salary.hra,
+          allowances: salary.allowances,
+          bonus: salary.bonuses,
+          grossSalary: salary.grossSalary,
+          attendanceDays: 26,
+          presentDays: 26 - unpaidLeaveDays,
+          halfDays: 0,
+          paidLeaveDays: 0,
+          unpaidLeaveDays: unpaidLeaveDays,
+          absentDays: 0,
+          leaveDeduction: leaveDeduction,
+          otherDeductions: salary.deductions,
+          totalDeductions: totalDeductions,
+          netSalary: salary.grossSalary - totalDeductions,
+          status: recordStatus,
+          approvedById: recordStatus === 'PAID' ? adminUser.id : null,
+          approvedAt: recordStatus === 'PAID' ? new Date() : null,
+        }
+      })
     }
   }
-  console.log('✅ Created payroll records')
+
+  console.log('✅ Created payroll periods and records')
 
   // Create notifications
   const notificationMessages = [
@@ -376,7 +428,6 @@ async function main() {
     data: [
       { actorId: adminUser.id, action: 'EMPLOYEE_CREATED', targetId: demoEmployee.id, targetType: 'USER', details: 'Created demo employee account' },
       { actorId: hrUsers[0].id, action: 'LEAVE_APPROVED', targetId: employees[0].id, targetType: 'LEAVE_REQUEST', details: 'Approved annual leave request' },
-      { actorId: hrUsers[1].id, action: 'SALARY_UPDATED', targetId: employees[1].id, targetType: 'USER', details: 'Updated salary structure' },
       { actorId: adminUser.id, action: 'ATTENDANCE_CORRECTED', targetId: employees[2].id, targetType: 'ATTENDANCE', details: 'Corrected check-in time' },
     ]
   })

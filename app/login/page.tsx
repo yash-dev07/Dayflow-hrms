@@ -58,9 +58,9 @@ export default function LoginPage() {
   }
 
   return (
-    <div className="min-h-screen flex">
+    <div className="min-h-screen flex bg-transparent">
       {/* Left panel - Brand */}
-      <div className="hidden lg:flex lg:w-1/2 bg-gradient-to-br from-gray-900 via-indigo-950 to-gray-900 flex-col justify-between p-12 relative overflow-hidden">
+      <div className="hidden lg:flex lg:w-1/2 bg-slate-900 border-r border-white/10 flex-col justify-between p-12 relative overflow-hidden">
         {/* Background decoration */}
         <div className="absolute inset-0 overflow-hidden">
           <div className="absolute top-1/4 -left-20 w-96 h-96 bg-indigo-600/20 rounded-full blur-3xl" />
@@ -112,24 +112,24 @@ export default function LoginPage() {
       </div>
 
       {/* Right panel - Login form */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-gray-50">
-        <div className="w-full max-w-sm">
+      <div className="flex-1 flex items-center justify-center p-8 bg-transparent">
+        <div className="w-full max-w-sm glass-card p-8 shadow-2xl">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2 mb-8">
-            <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-              <Zap className="w-5 h-5 text-white" fill="white" />
+            <div className="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(99,102,241,0.3)]">
+              <Zap className="w-5 h-5 text-indigo-600 dark:text-indigo-400" fill="currentColor" />
             </div>
-            <span className="font-bold text-xl text-gray-900">Dayflow</span>
+            <span className="font-bold text-xl text-foreground tracking-wide">DAYFLOW</span>
           </div>
 
           <div className="mb-8">
-            <h1 className="text-2xl font-bold text-gray-900">Welcome back</h1>
-            <p className="text-gray-500 mt-1">Sign in to your account to continue</p>
+            <h1 className="text-2xl font-bold text-foreground">Welcome back</h1>
+            <p className="text-muted-foreground mt-1">Sign in to your account to continue</p>
           </div>
 
           {/* Demo credentials */}
-          <div className="mb-6 p-4 bg-indigo-50 border border-indigo-100 rounded-xl">
-            <p className="text-xs font-semibold text-indigo-700 mb-2">🎯 Demo Accounts</p>
+          <div className="mb-6 p-4 bg-indigo-500/10 border border-indigo-500/20 rounded-xl">
+            <p className="text-xs font-semibold text-indigo-700 dark:text-indigo-400 mb-2">🎯 Demo Accounts</p>
             <div className="space-y-1.5">
               {[
                 { label: 'Admin', email: 'admin@dayflow.demo', pass: 'Admin@123', color: 'red' },
@@ -139,11 +139,11 @@ export default function LoginPage() {
                 <button
                   key={d.label}
                   onClick={() => demoLogin(d.email, d.pass)}
-                  className="w-full text-left flex items-center justify-between text-xs p-2 rounded-lg hover:bg-indigo-100 transition-colors group"
+                  className="w-full text-left flex items-center justify-between text-xs p-2 rounded-lg hover:bg-indigo-500/20 transition-colors group"
                 >
-                  <span className="font-medium text-indigo-800">{d.label}</span>
-                  <span className="text-indigo-500 group-hover:text-indigo-700 truncate ml-2">{d.email}</span>
-                  <span className="text-indigo-400 ml-2 text-[10px] bg-indigo-100 px-1.5 py-0.5 rounded">click</span>
+                  <span className="font-medium text-indigo-700 dark:text-indigo-300">{d.label}</span>
+                  <span className="text-indigo-600/70 dark:text-indigo-400/70 group-hover:text-indigo-700 dark:group-hover:text-indigo-300 truncate ml-2">{d.email}</span>
+                  <span className="text-indigo-700 dark:text-indigo-300 ml-2 text-[10px] bg-indigo-500/20 px-1.5 py-0.5 rounded">click</span>
                 </button>
               ))}
             </div>
@@ -172,7 +172,7 @@ export default function LoginPage() {
             <div>
               <div className="flex justify-between items-center mb-1">
                 <Label htmlFor="password">Password</Label>
-                <Link href="/forgot-password" className="text-xs text-indigo-600 hover:underline">
+                <Link href="/forgot-password" className="text-xs text-indigo-600 dark:text-indigo-400 hover:underline">
                   Forgot password?
                 </Link>
               </div>
@@ -190,7 +190,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={() => setShowPassword(!showPassword)}
-                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
+                  className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 dark:hover:text-gray-200"
                 >
                   {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                 </button>
@@ -202,9 +202,9 @@ export default function LoginPage() {
             </Button>
           </form>
 
-          <p className="text-center text-sm text-gray-500 mt-6">
+          <p className="text-center text-sm text-muted-foreground mt-6">
             Don&apos;t have an account?{' '}
-            <Link href="/signup" className="text-indigo-600 font-medium hover:underline">
+            <Link href="/signup" className="text-indigo-600 dark:text-indigo-400 font-medium hover:underline">
               Sign up
             </Link>
           </p>

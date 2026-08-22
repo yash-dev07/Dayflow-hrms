@@ -21,8 +21,13 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     : user.email
 
   return (
-    <div className="flex h-screen overflow-hidden bg-gray-50">
-      <Sidebar role={user.role as 'ADMIN' | 'HR'} userName={userName} employeeId={user.employeeId} />
+    <div className="flex h-screen overflow-hidden bg-transparent">
+      <Sidebar 
+        role={user.role as 'ADMIN' | 'HR'} 
+        userName={userName} 
+        employeeId={user.employeeId} 
+        profilePicture={user.profile?.profilePicture ?? undefined}
+      />
       <main className="flex-1 overflow-y-auto">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-2 lg:py-6">
           {children}

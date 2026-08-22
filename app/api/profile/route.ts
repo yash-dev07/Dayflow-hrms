@@ -12,7 +12,7 @@ export async function GET(request: NextRequest) {
       where: { id: session.userId },
       include: {
         profile: true,
-        salaryStructure: true,
+        salaryStructures: { take: 1, orderBy: { effectiveFrom: 'desc' } },
         documents: true,
       }
     })
@@ -25,7 +25,7 @@ export async function GET(request: NextRequest) {
       email: user.email,
       role: user.role,
       profile: user.profile,
-      salary: user.salaryStructure,
+      salary: user.salaryStructures[0] ?? null,
       documents: user.documents,
     })
   } catch (error) {

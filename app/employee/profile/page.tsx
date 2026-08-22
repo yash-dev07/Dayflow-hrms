@@ -1,6 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
+import { useRouter } from 'next/navigation'
 import { Save, Camera, Mail, Phone, MapPin, Building2, Briefcase, Calendar, Lock } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -45,10 +46,11 @@ interface ProfileData {
 
 export default function EmployeeProfilePage() {
   const [profile, setProfile] = useState<ProfileData | null>(null)
-  const [editData, setEditData] = useState({ phone: '', address: '', city: '', state: '', country: '' })
+  const [editData, setEditData] = useState({ phone: '', address: '', city: '', state: '', country: '', profilePicture: '' })
   const [isEditing, setIsEditing] = useState(false)
   const [isSaving, setIsSaving] = useState(false)
   const [isLoading, setIsLoading] = useState(true)
+  const router = useRouter()
 
   useEffect(() => {
     fetch('/api/profile')
@@ -61,6 +63,7 @@ export default function EmployeeProfilePage() {
           city: data.profile?.city ?? '',
           state: data.profile?.state ?? '',
           country: data.profile?.country ?? '',
+          profilePicture: data.profile?.profilePicture ?? '',
         })
       })
       .catch(() => toast({ title: 'Error', description: 'Failed to load profile', variant: 'destructive' }))
@@ -80,11 +83,10 @@ export default function EmployeeProfilePage() {
         toast({ title: 'Error', description: data.error, variant: 'destructive' })
         return
       }
-      toast({ title: 'Profile Updated', description: 'Your profile has been saved.', variant: 'success' })
+      setProfile(prev => prev ? { ...prev, profile: { ...prev.profile, ...editData } as any } : null)
       setIsEditing(false)
-      // Refresh profile data
-      const freshData = await fetch('/api/profile').then(r => r.json())
-      setProfile(freshData)
+      toast({ title: 'Profile Updated', description: 'Your profile has been saved.', variant: 'success' })
+      router.refresh()
     } catch {
       toast({ title: 'Error', description: 'Failed to save', variant: 'destructive' })
     } finally {
@@ -110,48 +112,81 @@ export default function EmployeeProfilePage() {
       <TopBar userName={fullName} role={profile?.role ?? 'EMPLOYEE'} />
 
       {/* Profile Header Card */}
-      <Card className="border-0 shadow-sm overflow-hidden">
-        <div className="h-32 bg-gradient-to-r from-indigo-600 via-purple-600 to-indigo-700" />
-        <CardContent className="p-6 pt-0">
-          <div className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-4 -mt-12">
-            <div className="flex items-end gap-4">
-              <div className="w-20 h-20 rounded-2xl bg-white border-4 border-white shadow-lg flex items-center justify-center bg-indigo-600 text-white text-xl font-bold">
-                {p?.profilePicture ? (
-                  <img src={p.profilePicture} alt={fullName} className="w-full h-full object-cover rounded-2xl" />
-                ) : (
-                  <span className="text-2xl font-bold bg-indigo-600 text-white rounded-2xl w-full h-full flex items-center justify-center">
-                    {initials}
-                  </span>
+      <Card className="border-0 shadow-sm overflow-hidden rounded-3xl">
+        <div className="bg-gradient-to-r from-indigo-600 via-indigo-700 to-purple-700 p-6 sm:p-8">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="flex items-center gap-6">
+              <div className="relative group">
+                <div className="w-24 h-24 rounded-2xl shadow-xl flex items-center justify-center text-white text-3xl font-bold overflow-hidden bg-gradient-to-br from-orange-400 via-red-500 to-purple-600">
+                  {p?.profilePicture ? (
+                    <img src={p.profilePicture} alt={fullName} className="w-full h-full object-cover" />
+                  ) : (
+                    <span className="w-full h-full flex items-center justify-center">
+                      {initials}
+                    </span>
+                  )}
+                </div>
+                {/* Photo Upload Overlay */}
+                {isEditing && (
+                  <label className="absolute inset-0 flex items-center justify-center bg-black/50 text-white opacity-0 group-hover:opacity-100 transition-opacity cursor-pointer rounded-2xl">
+                    <Camera className="w-6 h-6" />
+                    <input 
+                      type="file" 
+                      accept="image/*" 
+                      className="hidden" 
+                      onChange={(e) => {
+                        const file = e.target.files?.[0]
+                        if (file) {
+                          const reader = new FileReader()
+                          reader.onloadend = () => {
+                            setEditData(prev => ({ ...prev, profilePicture: reader.result as string }))
+                          }
+                          reader.readAsDataURL(file)
+                        }
+                      }}
+                    />
+                  </label>
                 )}
               </div>
-              <div className="mb-1">
-                <h1 className="text-xl font-bold text-gray-900">{fullName}</h1>
-                <p className="text-gray-500 text-sm">{p?.designation ?? 'Employee'} · {p?.department ?? 'N/A'}</p>
+              
+              <div>
+                <h1 className="text-3xl font-bold text-white tracking-tight">{fullName}</h1>
+                <p className="text-indigo-100 text-base font-medium mt-1">{p?.designation ?? 'Employee'}</p>
+                <div className="flex items-center gap-3 mt-3">
+                  <span className="flex items-center gap-1.5 text-xs font-medium text-white/80 bg-white/10 px-2.5 py-1 rounded-md">
+                    <Building2 className="w-3.5 h-3.5" />
+                    {p?.department ?? 'N/A'}
+                  </span>
+                  <span className="flex items-center gap-1.5 text-xs font-medium text-white/80 bg-white/10 px-2.5 py-1 rounded-md">
+                    <Lock className="w-3.5 h-3.5" />
+                    {profile?.employeeId}
+                  </span>
+                  <span className="text-xs font-bold text-white bg-indigo-500/50 px-2.5 py-1 rounded-full border border-indigo-400/30">
+                    {profile?.role}
+                  </span>
+                </div>
               </div>
             </div>
+            
             <div className="flex gap-2">
-              <Badge variant={
-                profile?.role === 'ADMIN' ? 'destructive' :
-                profile?.role === 'HR' ? 'default' : 'success'
-              }>
-                {profile?.role}
-              </Badge>
               {!isEditing ? (
-                <Button variant="outline" size="sm" onClick={() => setIsEditing(true)}>
+                <Button variant="outline" size="sm" onClick={() => setIsEditing(true)} className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white rounded-xl px-6">
                   Edit Profile
                 </Button>
               ) : (
                 <div className="flex gap-2">
-                  <Button variant="outline" size="sm" onClick={() => setIsEditing(false)}>Cancel</Button>
-                  <Button size="sm" loading={isSaving} onClick={handleSave}>
-                    <Save className="w-4 h-4" />
+                  <Button variant="outline" size="sm" onClick={() => setIsEditing(false)} className="bg-white/10 border-white/20 text-white hover:bg-white/20 hover:text-white rounded-xl">
+                    Cancel
+                  </Button>
+                  <Button size="sm" loading={isSaving} onClick={handleSave} className="bg-emerald-500 hover:bg-emerald-600 text-white rounded-xl px-6 border-0 shadow-lg shadow-emerald-500/20">
+                    <Save className="w-4 h-4 mr-2" />
                     Save Changes
                   </Button>
                 </div>
               )}
             </div>
           </div>
-        </CardContent>
+        </div>
       </Card>
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -36,9 +36,10 @@ interface SidebarProps {
   role: 'EMPLOYEE' | 'HR' | 'ADMIN'
   userName: string
   employeeId: string
+  profilePicture?: string
 }
 
-export function Sidebar({ role, userName, employeeId }: SidebarProps) {
+export function Sidebar({ role, userName, employeeId, profilePicture }: SidebarProps) {
   const pathname = usePathname()
   const router = useRouter()
   const [isMobileOpen, setIsMobileOpen] = useState(false)
@@ -61,26 +62,30 @@ export function Sidebar({ role, userName, employeeId }: SidebarProps) {
   const SidebarContent = () => (
     <div className="flex flex-col h-full">
       {/* Logo */}
-      <div className="flex items-center gap-3 px-4 py-5 border-b border-gray-800">
-        <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-          <Zap className="w-5 h-5 text-white" fill="white" />
+      <div className="flex items-center gap-3 px-4 py-5 border-b border-white/10">
+        <div className="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(99,102,241,0.3)]">
+          <Zap className="w-5 h-5 text-indigo-400" fill="currentColor" />
         </div>
         <div>
-          <h1 className="text-white font-bold text-base leading-tight">Dayflow</h1>
-          <p className="text-gray-500 text-xs">HRMS Platform</p>
+          <h1 className="text-foreground font-bold text-base leading-tight tracking-wide">DAYFLOW</h1>
+          <p className="text-indigo-400/70 text-xs font-medium">HRMS Platform</p>
         </div>
       </div>
 
       {/* User info */}
-      <div className="px-4 py-4 border-b border-gray-800">
+      <div className="px-4 py-4 border-b border-white/10">
         <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-full bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center">
-            <span className="text-indigo-400 text-sm font-semibold">
-              {userName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
-            </span>
+          <div className="w-9 h-9 rounded-full bg-indigo-600/20 border border-indigo-500/30 flex items-center justify-center overflow-hidden">
+            {profilePicture ? (
+              <img src={profilePicture} alt={userName} className="w-full h-full object-cover" />
+            ) : (
+              <span className="text-indigo-400 text-sm font-semibold">
+                {userName.split(' ').map(n => n[0]).join('').slice(0, 2).toUpperCase()}
+              </span>
+            )}
           </div>
           <div className="flex-1 min-w-0">
-            <p className="text-white text-sm font-medium truncate">{userName}</p>
+            <p className="text-foreground text-sm font-medium truncate">{userName}</p>
             <p className="text-gray-500 text-xs">{employeeId}</p>
           </div>
           <span className={cn(
@@ -139,7 +144,7 @@ export function Sidebar({ role, userName, employeeId }: SidebarProps) {
       {/* Mobile menu button */}
       <button
         onClick={() => setIsMobileOpen(true)}
-        className="lg:hidden fixed top-4 left-4 z-40 p-2 rounded-lg bg-gray-900 text-white shadow-lg"
+        className="lg:hidden fixed top-4 left-4 z-40 p-2 rounded-xl bg-card backdrop-blur-md border border-border text-foreground shadow-[0_4px_15px_rgba(0,0,0,0.1)] transition-all hover:bg-muted"
         aria-label="Open menu"
       >
         <Menu className="w-5 h-5" />
@@ -152,7 +157,7 @@ export function Sidebar({ role, userName, employeeId }: SidebarProps) {
           <aside className="relative w-60 sidebar h-full z-50">
             <button
               onClick={() => setIsMobileOpen(false)}
-              className="absolute top-4 right-4 text-gray-400 hover:text-white"
+              className="absolute top-4 right-4 text-muted-foreground hover:text-foreground"
             >
               <X className="w-5 h-5" />
             </button>

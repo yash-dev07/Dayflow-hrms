@@ -98,7 +98,7 @@ export default function EmployeeDashboard() {
   const hasCheckedIn = !!attendance?.checkIn
   const hasCheckedOut = !!attendance?.checkOut
   const userName = user?.profile ? `${user.profile.firstName} ${user.profile.lastName}` : user?.email ?? 'User'
-  const unreadCount = data?.recentNotifications.filter(n => !n.read).length ?? 0
+  const unreadCount = data?.recentNotifications?.filter((n: any) => !n.read).length ?? 0
 
   if (isLoading) {
     return (
@@ -118,7 +118,7 @@ export default function EmployeeDashboard() {
 
       {/* KPI Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="card-hover border-0 shadow-sm bg-gradient-to-br from-indigo-500 to-indigo-600 text-white">
+        <Card className="card-hover border-0 shadow-sm bg-indigo-500 text-white">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
@@ -137,7 +137,7 @@ export default function EmployeeDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="card-hover border-0 shadow-sm bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
+        <Card className="card-hover border-0 shadow-sm bg-emerald-500 text-white">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
@@ -154,7 +154,7 @@ export default function EmployeeDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="card-hover border-0 shadow-sm bg-gradient-to-br from-violet-500 to-violet-600 text-white">
+        <Card className="card-hover border-0 shadow-sm bg-violet-500 text-white">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
@@ -169,7 +169,7 @@ export default function EmployeeDashboard() {
           </CardContent>
         </Card>
 
-        <Card className="card-hover border-0 shadow-sm bg-gradient-to-br from-amber-500 to-amber-600 text-white">
+        <Card className="card-hover border-0 shadow-sm bg-amber-500 text-white">
           <CardContent className="p-5">
             <div className="flex items-center justify-between">
               <div>
@@ -308,7 +308,7 @@ export default function EmployeeDashboard() {
             <Link
               key={action.href}
               href={action.href}
-              className="flex flex-col items-center gap-2 p-4 bg-white rounded-xl border border-gray-100 shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
+              className="flex flex-col items-center gap-2 p-4 bg-card rounded-xl border border-border shadow-sm hover:shadow-md hover:-translate-y-0.5 transition-all duration-200"
             >
               <div className={`w-10 h-10 ${action.color} rounded-xl flex items-center justify-center`}>
                 <action.icon className="w-5 h-5" />

@@ -139,8 +139,8 @@ export default function EmployeeLeavePage() {
             onClick={() => setActiveTab(tab)}
             className={`px-4 py-1.5 rounded-md text-sm font-medium transition-all ${
               activeTab === tab
-                ? 'bg-white text-gray-900 shadow-sm'
-                : 'text-gray-600 hover:text-gray-900'
+                ? 'bg-background text-foreground shadow-sm'
+                : 'text-muted-foreground hover:text-foreground'
             }`}
           >
             {tab === 'leaves' ? 'Leave Requests' : 'Attendance History'}

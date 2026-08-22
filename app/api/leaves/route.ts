@@ -16,10 +16,16 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get('limit') ?? '20')
 
     const isAdmin = ['ADMIN', 'HR'].includes(session.role)
+    const userId = session.userId || (session as any).id
+    if (!userId) {
+      return NextResponse.json({ error: 'Invalid token payload' }, { status: 401 })
+    }
+
     const where: Record<string, unknown> = {}
 
-    if (!isAdmin) {
-      where.employeeId = session.userId
+    // Employees only see their own leaves, HR/Admin see all or filter by employee
+    if (session.role === 'EMPLOYEE') {
+      where.employeeId = userId
     } else if (employeeId) {
       where.employeeId = employeeId
     }
@@ -63,6 +69,11 @@ export async function POST(request: NextRequest) {
     const session = getTokenFromRequest(request)
     if (!session) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
+    const userId = session.userId || (session as any).id
+    if (!userId) {
+      return NextResponse.json({ error: 'Invalid token payload' }, { status: 401 })
+    }
+
     const body = await request.json()
     const validation = leaveRequestSchema.safeParse(body)
     if (!validation.success) {
@@ -79,7 +90,7 @@ export async function POST(request: NextRequest) {
     // Check for overlapping approved/pending leaves
     const overlapping = await prisma.leaveRequest.findFirst({
       where: {
-        employeeId: session.userId,
+        employeeId: userId,
         status: { in: ['PENDING', 'APPROVED'] },
         OR: [
           { startDate: { lte: new Date(endDate) }, endDate: { gte: new Date(startDate) } }
@@ -95,7 +106,7 @@ export async function POST(request: NextRequest) {
 
     const leaveRequest = await prisma.leaveRequest.create({
       data: {
-        employeeId: session.userId,
+        employeeId: userId,
         leaveTypeId,
         startDate: new Date(startDate),
         endDate: new Date(endDate),

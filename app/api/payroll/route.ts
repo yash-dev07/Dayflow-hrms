@@ -15,10 +15,11 @@ export async function GET(request: NextRequest) {
     if (!isAdmin) {
       // Employee: own payroll only
       const [salary, payroll] = await Promise.all([
-        prisma.salaryStructure.findUnique({ where: { employeeId: session.userId } }),
+        prisma.salaryStructure.findFirst({ where: { employeeId: session.userId }, orderBy: { effectiveFrom: 'desc' } }),
         prisma.payrollRecord.findMany({
           where: { employeeId: session.userId },
-          orderBy: [{ year: 'desc' }, { month: 'desc' }],
+          orderBy: { createdAt: 'desc' },
+          include: { payrollPeriod: true },
           take: 12,
         })
       ])
@@ -43,8 +44,9 @@ export async function GET(request: NextRequest) {
       }),
       prisma.payrollRecord.findMany({
         where: targetId ? { employeeId: targetId } : undefined,
-        orderBy: [{ year: 'desc' }, { month: 'desc' }],
+        orderBy: { createdAt: 'desc' },
         include: {
+          payrollPeriod: true,
           employee: {
             select: {
               employeeId: true,

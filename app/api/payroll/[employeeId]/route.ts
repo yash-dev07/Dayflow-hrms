@@ -19,8 +19,9 @@ export async function GET(
       return NextResponse.json({ error: 'Insufficient permissions' }, { status: 403 })
     }
 
-    const salary = await prisma.salaryStructure.findUnique({
+    const salary = await prisma.salaryStructure.findFirst({
       where: { employeeId },
+      orderBy: { effectiveFrom: 'desc' },
       include: {
         employee: {
           select: {
@@ -56,18 +57,13 @@ export async function PATCH(
       return NextResponse.json({ error: validation.error.errors[0].message }, { status: 400 })
     }
 
-    const { grossSalary, netSalary } = calculateSalary(validation.data)
+    const { basicSalary, hra, allowances, deductions, bonuses } = validation.data
+    const grossSalary = basicSalary + hra + allowances + bonuses
+    const netSalary = grossSalary - deductions
 
-    const salary = await prisma.salaryStructure.upsert({
-      where: { employeeId },
-      create: {
+    const salary = await prisma.salaryStructure.create({
+      data: {
         employeeId,
-        ...validation.data,
-        grossSalary,
-        netSalary,
-        effectiveFrom: new Date(),
-      },
-      update: {
         ...validation.data,
         grossSalary,
         netSalary,
@@ -75,27 +71,6 @@ export async function PATCH(
       }
     })
 
-    // Create payroll record for current month
-    const now = new Date()
-    await prisma.payrollRecord.upsert({
-      where: { employeeId_month_year: { employeeId, month: now.getMonth() + 1, year: now.getFullYear() } },
-      create: {
-        employeeId,
-        month: now.getMonth() + 1,
-        year: now.getFullYear(),
-        basicSalary: validation.data.basicSalary,
-        grossSalary,
-        deductions: validation.data.deductions,
-        netSalary,
-        paymentStatus: 'PENDING',
-      },
-      update: {
-        basicSalary: validation.data.basicSalary,
-        grossSalary,
-        deductions: validation.data.deductions,
-        netSalary,
-      }
-    })
 
     // Notify the employee
     await prisma.notification.create({

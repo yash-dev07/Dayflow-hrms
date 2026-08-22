@@ -32,6 +32,23 @@ enum PaymentStatus {
   PENDING
 }
 
+enum PayrollPeriodStatus {
+  DRAFT
+  PROCESSING
+  FINALIZED
+  PAID
+  CLOSED
+}
+
+enum PayrollRecordStatus {
+  DRAFT
+  PROCESSING
+  GENERATED
+  APPROVED
+  REJECTED
+  PAID
+}
+
 enum NotificationType {
   INFO
   SUCCESS
@@ -53,8 +70,11 @@ model User {
   profile          EmployeeProfile?
   attendance       Attendance[]
   leaveRequests    LeaveRequest[]
-  salaryStructure  SalaryStructure?
-  payrollRecords   PayrollRecord[]
+  salaryStructures SalaryStructure[]
+  payrollRecords   PayrollRecord[]  @relation("EmployeePayroll")
+  reviewedPayroll  PayrollRecord[]  @relation("ReviewedPayroll")
+  approvedPayroll  PayrollRecord[]  @relation("ApprovedPayroll")
+  payrollAuditLogs PayrollAuditLog[]
   notifications    Notification[]
   documents        Document[]
   activityLogs     ActivityLog[]    @relation("ActorLogs")
@@ -145,7 +165,7 @@ model LeaveRequest {
 
 model SalaryStructure {
   id           String   @id @default(cuid())
-  employeeId   String   @unique
+  employeeId   String   
   basicSalary  Float    @default(0)
   hra          Float    @default(0)
   allowances   Float    @default(0)
@@ -163,21 +183,96 @@ model SalaryStructure {
 }
 
 model PayrollRecord {
-  id            String        @id @default(cuid())
-  employeeId    String
-  month         Int
-  year          Int
-  basicSalary   Float
-  grossSalary   Float
-  deductions    Float
-  netSalary     Float
-  paymentStatus PaymentStatus @default(PENDING)
-  generatedAt   DateTime      @default(now())
+  id              String              @id @default(cuid())
+  employeeId      String
+  payrollPeriodId String
 
-  employee User @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  basicSalary     Float               @default(0)
+  hra             Float               @default(0)
+  allowances      Float               @default(0)
+  bonus           Float               @default(0)
+  grossSalary     Float               @default(0)
 
-  @@unique([employeeId, month, year])
+  attendanceDays  Float               @default(0)
+  presentDays     Float               @default(0)
+  halfDays        Float               @default(0)
+  paidLeaveDays   Float               @default(0)
+  unpaidLeaveDays Float               @default(0)
+  absentDays      Float               @default(0)
+
+  leaveDeduction  Float               @default(0)
+  otherDeductions Float               @default(0)
+  totalDeductions Float               @default(0)
+
+  netSalary       Float               @default(0)
+
+  status          PayrollRecordStatus @default(DRAFT)
+
+  generatedAt     DateTime            @default(now())
+  reviewedAt      DateTime?
+  approvedAt      DateTime?
+
+  reviewedById    String?
+  approvedById    String?
+
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  employee        User                @relation("EmployeePayroll", fields: [employeeId], references: [id], onDelete: Cascade)
+  payrollPeriod   PayrollPeriod       @relation(fields: [payrollPeriodId], references: [id], onDelete: Cascade)
+  reviewedBy      User?               @relation("ReviewedPayroll", fields: [reviewedById], references: [id])
+  approvedBy      User?               @relation("ApprovedPayroll", fields: [approvedById], references: [id])
+  auditLogs       PayrollAuditLog[]
+
+  @@unique([employeeId, payrollPeriodId])
   @@map("payroll_records")
+}
+
+model PayrollPeriod {
+  id          String              @id @default(cuid())
+  month       Int
+  year        Int
+  startDate   DateTime
+  endDate     DateTime
+  status      PayrollPeriodStatus @default(DRAFT)
+  createdAt   DateTime            @default(now())
+  updatedAt   DateTime            @updatedAt
+
+  records     PayrollRecord[]
+
+  @@unique([month, year])
+  @@map("payroll_periods")
+}
+
+model PayrollAuditLog {
+  id              String        @id @default(cuid())
+  payrollRecordId String
+  actorId         String
+  action          String
+  oldStatus       String?
+  newStatus       String?
+  comment         String?
+  createdAt       DateTime      @default(now())
+
+  payrollRecord   PayrollRecord @relation(fields: [payrollRecordId], references: [id], onDelete: Cascade)
+  actor           User          @relation(fields: [actorId], references: [id], onDelete: Cascade)
+
+  @@map("payroll_audit_logs")
+}
+
+model PayrollPolicy {
+  id                          String   @id @default(cuid())
+  workingDaysPerMonth         Int      @default(26)
+  unpaidLeaveDeductionEnabled Boolean  @default(true)
+  overtimeEnabled             Boolean  @default(false)
+  taxCalculationEnabled       Boolean  @default(false)
+  pfEnabled                   Boolean  @default(false)
+  esiEnabled                  Boolean  @default(false)
+  professionalTaxEnabled      Boolean  @default(false)
+  createdAt                   DateTime @default(now())
+  updatedAt                   DateTime @updatedAt
+
+  @@map("payroll_policies")
 }
 
 model Notification {

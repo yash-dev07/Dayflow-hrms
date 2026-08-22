@@ -22,14 +22,13 @@ interface PayrollData {
   } | null
   payroll: Array<{
     id: string
-    month: number
-    year: number
+    payrollPeriod: { month: number, year: number }
     basicSalary: number
     grossSalary: number
-    deductions: number
+    totalDeductions: number
     netSalary: number
-    paymentStatus: string
-    generatedAt: string
+    status: string
+    createdAt: string
   }>
 }
 
@@ -91,21 +90,21 @@ export default function EmployeePayrollPage() {
         <>
           {/* Salary Summary Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-            <Card className="border-0 shadow-sm bg-gradient-to-br from-indigo-500 to-indigo-600 text-white">
+            <Card className="border-0 shadow-sm bg-indigo-500 text-white">
               <CardContent className="p-5">
                 <p className="text-indigo-200 text-xs font-medium mb-1">Basic Salary</p>
                 <p className="text-2xl font-bold">{formatCurrency(salary.basicSalary)}</p>
                 <p className="text-indigo-200 text-xs mt-1">Per month</p>
               </CardContent>
             </Card>
-            <Card className="border-0 shadow-sm bg-gradient-to-br from-emerald-500 to-emerald-600 text-white">
+            <Card className="border-0 shadow-sm bg-emerald-500 text-white">
               <CardContent className="p-5">
                 <p className="text-emerald-200 text-xs font-medium mb-1">Gross Salary</p>
                 <p className="text-2xl font-bold">{formatCurrency(salary.grossSalary)}</p>
                 <p className="text-emerald-200 text-xs mt-1">Before deductions</p>
               </CardContent>
             </Card>
-            <Card className="border-0 shadow-sm bg-gradient-to-br from-amber-500 to-amber-600 text-white">
+            <Card className="border-0 shadow-sm bg-amber-500 text-white">
               <CardContent className="p-5">
                 <p className="text-amber-200 text-xs font-medium mb-1">Net Salary</p>
                 <p className="text-2xl font-bold">{formatCurrency(salary.netSalary)}</p>
@@ -178,30 +177,34 @@ export default function EmployeePayrollPage() {
                     <thead>
                       <tr className="border-b border-gray-100">
                         <th className="text-left text-xs font-medium text-gray-500 py-3 px-6">Period</th>
-                        <th className="text-left text-xs font-medium text-gray-500 py-3 px-4">Basic</th>
                         <th className="text-left text-xs font-medium text-gray-500 py-3 px-4">Gross</th>
                         <th className="text-left text-xs font-medium text-gray-500 py-3 px-4">Deductions</th>
                         <th className="text-left text-xs font-medium text-gray-500 py-3 px-4">Net Pay</th>
                         <th className="text-left text-xs font-medium text-gray-500 py-3 px-4">Status</th>
+                        <th className="text-left text-xs font-medium text-gray-500 py-3 px-4">Slip</th>
                       </tr>
                     </thead>
                     <tbody>
                       {data.payroll.map(record => (
                         <tr key={record.id} className="border-b border-gray-50 hover:bg-gray-50">
                           <td className="py-3 px-6 text-sm font-medium text-gray-900">
-                            {MONTHS[record.month - 1]} {record.year}
+                            {MONTHS[record.payrollPeriod.month - 1]} {record.payrollPeriod.year}
                           </td>
-                          <td className="py-3 px-4 text-sm text-gray-700">{formatCurrency(record.basicSalary)}</td>
                           <td className="py-3 px-4 text-sm text-gray-700">{formatCurrency(record.grossSalary)}</td>
-                          <td className="py-3 px-4 text-sm text-red-600">-{formatCurrency(record.deductions)}</td>
+                          <td className="py-3 px-4 text-sm text-red-600">-{formatCurrency(record.totalDeductions)}</td>
                           <td className="py-3 px-4 text-sm font-bold text-gray-900">{formatCurrency(record.netSalary)}</td>
                           <td className="py-3 px-4">
                             <Badge variant={
-                              record.paymentStatus === 'PAID' ? 'success' :
-                              record.paymentStatus === 'PROCESSING' ? 'blue' : 'warning'
+                              record.status === 'PAID' ? 'success' :
+                              record.status === 'GENERATED' || record.status === 'APPROVED' ? 'blue' : 'warning'
                             }>
-                              {record.paymentStatus}
+                              {record.status}
                             </Badge>
+                          </td>
+                          <td className="py-3 px-4">
+                            <a href={`/admin/payroll/records/${record.id}/slip`} target="_blank" className="text-indigo-600 hover:text-indigo-800 text-sm flex items-center">
+                              <Printer className="w-4 h-4 mr-1" /> View Slip
+                            </a>
                           </td>
                         </tr>
                       ))}

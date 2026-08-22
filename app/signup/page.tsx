@@ -68,19 +68,19 @@ export default function SignupPage() {
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50 p-8">
+    <div className="min-h-screen flex items-center justify-center bg-transparent p-8">
       <div className="w-full max-w-md">
-        <div className="flex items-center gap-2 mb-8">
-          <div className="w-8 h-8 rounded-lg bg-indigo-600 flex items-center justify-center">
-            <Zap className="w-5 h-5 text-white" fill="white" />
+        <div className="flex items-center gap-2 mb-8 justify-center">
+          <div className="w-8 h-8 rounded-lg bg-indigo-500/20 border border-indigo-500/30 flex items-center justify-center shadow-[0_0_15px_rgba(99,102,241,0.3)]">
+            <Zap className="w-5 h-5 text-indigo-400" fill="currentColor" />
           </div>
-          <span className="font-bold text-xl text-gray-900">Dayflow</span>
+          <span className="font-bold text-xl text-white tracking-wide">DAYFLOW</span>
         </div>
 
-        <div className="bg-white rounded-2xl border border-gray-100 shadow-sm p-8">
-          <div className="mb-6">
-            <h1 className="text-2xl font-bold text-gray-900">Create account</h1>
-            <p className="text-gray-500 mt-1 text-sm">Join Dayflow as an employee</p>
+        <div className="glass-card shadow-2xl p-8">
+          <div className="mb-6 text-center">
+            <h1 className="text-2xl font-bold text-white">Create account</h1>
+            <p className="text-gray-400 mt-1 text-sm">Join Dayflow as an employee</p>
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-4">
@@ -152,18 +152,18 @@ export default function SignupPage() {
               />
             </div>
 
-            <div className="text-xs text-gray-500 bg-amber-50 border border-amber-100 rounded-lg p-3">
+            <div className="text-xs text-gray-400 bg-amber-500/10 border border-amber-500/20 rounded-lg p-3">
               ℹ️ Public registration creates an Employee account. Contact your HR for HR/Admin access.
             </div>
 
-            <Button type="submit" className="w-full" loading={isLoading} size="lg">
+            <Button type="submit" className="w-full btn-3d" loading={isLoading} size="lg">
               Create Account
             </Button>
           </form>
 
-          <p className="text-center text-sm text-gray-500 mt-6">
+          <p className="text-center text-sm text-gray-400 mt-6">
             Already have an account?{' '}
-            <Link href="/login" className="text-indigo-600 font-medium hover:underline">Sign in</Link>
+            <Link href="/login" className="text-indigo-400 font-medium hover:underline">Sign in</Link>
           </p>
         </div>
       </div>

@@ -11,16 +11,28 @@ export const metadata: Metadata = {
   keywords: ['HRMS', 'HR Management', 'Attendance', 'Leave Management', 'Payroll'],
 }
 
+import { ThemeProvider } from '@/components/theme-provider'
+
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={inter.variable}>
-      <body className="min-h-screen bg-background font-sans antialiased">
-        {children}
-        <Toaster />
+    <html lang="en" className={inter.variable} suppressHydrationWarning>
+      <body className="min-h-screen bg-background font-sans antialiased text-foreground">
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="system"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <div className="aurora-bg">
+            <div className="aurora-blob"></div>
+          </div>
+          {children}
+          <Toaster />
+        </ThemeProvider>
       </body>
     </html>
   )

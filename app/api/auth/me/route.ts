@@ -9,8 +9,13 @@ export async function GET(request: NextRequest) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
     }
 
+    const userId = session.userId || (session as any).id
+    if (!userId) {
+      return NextResponse.json({ error: 'Invalid token payload' }, { status: 401 })
+    }
+
     const user = await prisma.user.findUnique({
-      where: { id: session.userId },
+      where: { id: userId },
       select: {
         id: true,
         employeeId: true,

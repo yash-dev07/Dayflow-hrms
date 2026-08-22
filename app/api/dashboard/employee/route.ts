@@ -42,7 +42,9 @@ export async function GET(request: NextRequest) {
       prisma.leaveRequest.count({
         where: { employeeId: session.userId, status: 'PENDING' }
       }),
-      prisma.salaryStructure.findUnique({ where: { employeeId: session.userId } }),
+      prisma.leaveRequest.findMany({ where: { employeeId: session.userId }, orderBy: { createdAt: 'desc' }, take: 5 }),
+      prisma.salaryStructure.findFirst({ where: { employeeId: session.userId }, orderBy: { effectiveFrom: 'desc' } }),
+      prisma.payrollRecord.findFirst({ where: { employeeId: session.userId }, orderBy: { createdAt: 'desc' } }),
       prisma.notification.findMany({
         where: { userId: session.userId },
         orderBy: { createdAt: 'desc' },

@@ -6,7 +6,6 @@ export default async function HomePage() {
   if (!session) {
     redirect('/login')
   }
-  
   if (['ADMIN', 'HR'].includes(session.role)) {
     redirect('/admin/dashboard')
   }

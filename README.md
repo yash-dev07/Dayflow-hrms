@@ -20,12 +20,6 @@
   <img src="https://img.shields.io/github/license/yash-dev07/Dayflow-hrms?style=for-the-badge" alt="License" />
 </p>
 
-<p>
-  <a href="https://dayflow-hrms-ilrfs21l4-yash-dev07s-projects.vercel.app"><img src="https://img.shields.io/badge/Live%20Demo-Visit-success?style=for-the-badge&logo=vercel" alt="Live Demo" /></a>
-  <a href="https://github.com/yash-dev07/Dayflow-hrms/issues"><img src="https://img.shields.io/badge/Report-Bug-red?style=for-the-badge&logo=github" alt="Report Bug" /></a>
-  <a href="https://github.com/yash-dev07/Dayflow-hrms/issues"><img src="https://img.shields.io/badge/Request-Feature-blue?style=for-the-badge&logo=github" alt="Request Feature" /></a>
-</p>
-
 </div>
 
 > The live demo badge points at a Vercel preview URL, which changes on every deploy. Set a stable domain under Vercel → Project → Settings → Domains (e.g. `dayflow-hrms.vercel.app`) and swap the link above once you do.

@@ -10,7 +10,6 @@ export const metadata: Metadata = {
   description: 'A modern Human Resource Management System for streamlined HR operations.',
   keywords: ['HRMS', 'HR Management', 'Attendance', 'Leave Management', 'Payroll'],
 }
-
 import { ThemeProvider } from '@/components/theme-provider'
 
 export default function RootLayout({

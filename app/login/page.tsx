@@ -112,7 +112,7 @@ export default function LoginPage() {
       </div>
 
       {/* Right panel - Login form */}
-      <div className="flex-1 flex items-center justify-center p-8 bg-transparent">
+      <div className="flex-1 flex items-start justify-center p-8 pt-12 lg:pt-24 bg-transparent overflow-y-auto">
         <div className="w-full max-w-sm glass-card p-8 shadow-2xl">
           {/* Mobile logo */}
           <div className="lg:hidden flex items-center gap-2 mb-8">

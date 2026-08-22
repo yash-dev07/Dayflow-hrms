@@ -11,7 +11,7 @@
   <img src="https://img.shields.io/badge/TypeScript-Ready-3178C6?style=for-the-badge&logo=typescript" alt="TypeScript" />
 </p>
 
-[Live Demo](https://dayflow-hrms-seven.vercel.app) • [Report Bug](#) • [Request Feature](#)
+
 
 </div>
 

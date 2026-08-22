@@ -1,5 +1,4 @@
 @import "tailwindcss";
-
 @layer base {
   :root {
     --background: 250 250 252;
@@ -23,7 +22,6 @@
     --ring: 99 102 241;
     --radius: 0.75rem;
     
-    /* Sidebar */
     --sidebar-bg: 17 24 39;
     --sidebar-fg: 209 213 219;
     --sidebar-active: 99 102 241;
@@ -37,6 +35,7 @@
     border-color: rgb(var(--border));
     box-sizing: border-box;
   }
+
   
   body {
     background-color: rgb(var(--background));
@@ -45,14 +44,13 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
-
   h1, h2, h3, h4, h5, h6 {
     font-weight: 600;
     letter-spacing: -0.02em;
   }
 }
 
-/* Custom scrollbar */
+
 ::-webkit-scrollbar {
   width: 6px;
   height: 6px;
@@ -68,7 +66,7 @@
   background: rgb(var(--muted-foreground));
 }
 
-/* Skeleton animation */
+
 @keyframes shimmer {
   0% { background-position: -200% 0; }
   100% { background-position: 200% 0; }
@@ -89,7 +87,7 @@
   background-clip: text;
 }
 
-/* Card hover effect */
+
 .card-hover {
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
@@ -98,7 +96,6 @@
   box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
 }
 
-/* Status badge */
 .badge {
   display: inline-flex;
   align-items: center;
@@ -109,7 +106,7 @@
   line-height: 1.25rem;
 }
 
-/* Sidebar */
+
 .sidebar {
   background: rgb(var(--sidebar-bg));
   border-right: 1px solid rgb(var(--sidebar-border));
@@ -139,7 +136,7 @@
   border: 1px solid rgba(99, 102, 241, 0.2);
 }
 
-/* Smooth page transitions */
+
 .page-enter {
   animation: fadeIn 0.3s ease;
 }
@@ -149,12 +146,11 @@
   to { opacity: 1; transform: translateY(0); }
 }
 
-/* Chart tooltip */
+
 .recharts-tooltip-wrapper {
   border-radius: 8px !important;
 }
 
-/* Loading spinner */
 @keyframes spin {
   to { transform: rotate(360deg); }
 }

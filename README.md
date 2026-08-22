@@ -54,11 +54,11 @@ Dayflow HRMS is a unified Human Resource Management System that brings employee 
 
 | | |
 |---|---|
-| 🔐 **Role-based access control** | JWT-based auth with dedicated views for `ADMIN`, `HR`, and `EMPLOYEE`, enforced on both UI and API |
-| ⏱️ **Real-time attendance** | One-click check-in/check-out with automatic hours-worked calculation |
-| 🌴 **Leave management** | Sick, casual, and unpaid leave requests with approval workflow and automatic balance deduction |
-| 💰 **Automated payroll** | Salary calculation with allowances/deductions (HRA, tax) and printable salary slips |
-| 🎨 **Responsive UI** | Dark/light mode, animated backgrounds, fully responsive layout |
+|  **Role-based access control** | JWT-based auth with dedicated views for `ADMIN`, `HR`, and `EMPLOYEE`, enforced on both UI and API |
+|  **Real-time attendance** | One-click check-in/check-out with automatic hours-worked calculation |
+|  **Leave management** | Sick, casual, and unpaid leave requests with approval workflow and automatic balance deduction |
+|  **Automated payroll** | Salary calculation with allowances/deductions (HRA, tax) and printable salary slips |
+|  **Responsive UI** | Dark/light mode, animated backgrounds, fully responsive layout |
 
 <details>
 <summary><strong>Screenshots</strong> (click to expand)</summary>

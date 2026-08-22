@@ -21,7 +21,7 @@
 
 </div>
 
-> The live demo badge points at a Vercel preview URL, which changes on every deploy. Set a stable domain under Vercel → Project → Settings → Domains (e.g. `dayflow-hrms.vercel.app`) and swap the link above once you do.
+
 
 ---
 

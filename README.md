@@ -2,7 +2,7 @@
 
 # Dayflow HRMS
 
-![Typing SVG](https://readme-typing-svg.demolab.com/?font=Fira+Code&size=22&pause=1000&color=06B6D4&center=true&vCenter=true&width=520&lines=Every+workday%2C+perfectly+aligned.;Attendance+%C2%B7+Leave+%C2%B7+Payroll+%C2%B7+One+platform.)
+![Typing SVG](https://readme-typing-svg.demolab.com/?font=Fira+Code&size=22&pause=1000&color=06B6D4&center=true&vCenter=true&width=520&lines=Every+workday%2C+perfectly+aligned.;Attendance+%C2%B7+Leave+%C2%B7+Payroll+%C2%B7+One+platform)
 
 <p>
   <img src="https://img.shields.io/badge/Next.js-16-black?style=for-the-badge&logo=next.js" alt="Next.js" />

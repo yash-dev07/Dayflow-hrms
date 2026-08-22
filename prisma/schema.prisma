@@ -1,0 +1,223 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Role {
+  EMPLOYEE
+  HR
+  ADMIN
+}
+
+enum AttendanceStatus {
+  PRESENT
+  ABSENT
+  HALF_DAY
+  LEAVE
+}
+
+enum LeaveStatus {
+  PENDING
+  APPROVED
+  REJECTED
+  CANCELLED
+}
+
+enum PaymentStatus {
+  PAID
+  PROCESSING
+  PENDING
+}
+
+enum NotificationType {
+  INFO
+  SUCCESS
+  WARNING
+  ERROR
+}
+
+model User {
+  id            String   @id @default(cuid())
+  employeeId    String   @unique
+  email         String   @unique
+  passwordHash  String
+  role          Role     @default(EMPLOYEE)
+  emailVerified Boolean  @default(false)
+  isActive      Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+
+  profile          EmployeeProfile?
+  attendance       Attendance[]
+  leaveRequests    LeaveRequest[]
+  salaryStructure  SalaryStructure?
+  payrollRecords   PayrollRecord[]
+  notifications    Notification[]
+  documents        Document[]
+  activityLogs     ActivityLog[]    @relation("ActorLogs")
+  targetLogs       ActivityLog[]    @relation("TargetLogs")
+  reviewedLeaves   LeaveRequest[]   @relation("ReviewedBy")
+
+  @@map("users")
+}
+
+model EmployeeProfile {
+  id             String   @id @default(cuid())
+  userId         String   @unique
+  firstName      String
+  lastName       String
+  phone          String?
+  address        String?
+  city           String?
+  state          String?
+  country        String?
+  dateOfBirth    DateTime?
+  gender         String?
+  profilePicture String?
+  department     String?
+  designation    String?
+  joiningDate    DateTime?
+  employmentType String?
+  managerId      String?
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("employee_profiles")
+}
+
+model Attendance {
+  id          String           @id @default(cuid())
+  employeeId  String
+  date        DateTime         @db.Date
+  checkIn     DateTime?
+  checkOut    DateTime?
+  status      AttendanceStatus @default(ABSENT)
+  workedHours Float?
+  remarks     String?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
+
+  employee User @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeId, date])
+  @@map("attendance")
+}
+
+model LeaveType {
+  id              String  @id @default(cuid())
+  name            String  @unique
+  description     String?
+  annualAllowance Int     @default(0)
+  color           String  @default("#6366f1")
+
+  leaveRequests LeaveRequest[]
+
+  @@map("leave_types")
+}
+
+model LeaveRequest {
+  id              String      @id @default(cuid())
+  employeeId      String
+  leaveTypeId     String
+  startDate       DateTime    @db.Date
+  endDate         DateTime    @db.Date
+  numberOfDays    Int
+  reason          String
+  status          LeaveStatus @default(PENDING)
+  employeeComment String?
+  hrComment       String?
+  reviewedBy      String?
+  reviewedAt      DateTime?
+  createdAt       DateTime    @default(now())
+  updatedAt       DateTime    @updatedAt
+
+  employee  User      @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+  leaveType LeaveType @relation(fields: [leaveTypeId], references: [id])
+  reviewer  User?     @relation("ReviewedBy", fields: [reviewedBy], references: [id])
+
+  @@map("leave_requests")
+}
+
+model SalaryStructure {
+  id           String   @id @default(cuid())
+  employeeId   String   @unique
+  basicSalary  Float    @default(0)
+  hra          Float    @default(0)
+  allowances   Float    @default(0)
+  deductions   Float    @default(0)
+  bonuses      Float    @default(0)
+  grossSalary  Float    @default(0)
+  netSalary    Float    @default(0)
+  effectiveFrom DateTime @default(now())
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  employee User @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@map("salary_structures")
+}
+
+model PayrollRecord {
+  id            String        @id @default(cuid())
+  employeeId    String
+  month         Int
+  year          Int
+  basicSalary   Float
+  grossSalary   Float
+  deductions    Float
+  netSalary     Float
+  paymentStatus PaymentStatus @default(PENDING)
+  generatedAt   DateTime      @default(now())
+
+  employee User @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@unique([employeeId, month, year])
+  @@map("payroll_records")
+}
+
+model Notification {
+  id        String           @id @default(cuid())
+  userId    String
+  title     String
+  message   String
+  type      NotificationType @default(INFO)
+  read      Boolean          @default(false)
+  createdAt DateTime         @default(now())
+
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("notifications")
+}
+
+model Document {
+  id           String   @id @default(cuid())
+  employeeId   String
+  name         String
+  documentType String
+  url          String
+  uploadedAt   DateTime @default(now())
+
+  employee User @relation(fields: [employeeId], references: [id], onDelete: Cascade)
+
+  @@map("documents")
+}
+
+model ActivityLog {
+  id        String   @id @default(cuid())
+  actorId   String
+  action    String
+  targetId  String?
+  targetType String?
+  details   String?
+  createdAt DateTime @default(now())
+
+  actor  User  @relation("ActorLogs", fields: [actorId], references: [id], onDelete: Cascade)
+  target User? @relation("TargetLogs", fields: [targetId], references: [id])
+
+  @@map("activity_logs")
+}

@@ -1,6 +1,6 @@
 <div align="center">
   
-# ⚡️ Dayflow HRMS
+#  Dayflow HRMS
 **Every workday, perfectly aligned.**
 
 <p align="center">
@@ -17,21 +17,21 @@
 
 ---
 
-## 📖 Overview
+##  Overview
 
 **Dayflow HRMS** is a modern, unified Human Resource Management System built to scale. Designed with a hyper-polished Glassmorphism aesthetic and robust backend architecture, Dayflow eliminates the friction of traditional HR platforms by bringing employee management, attendance, leaves, and automated payroll processing under one incredibly beautiful roof.
 
-### 🌟 Key Features
+###  Key Features
 
-- **🔐 Strict Role-Based Access Control:** Secure JWT-based authentication supporting `ADMIN`, `HR`, and `EMPLOYEE` roles with dedicated dashboard views.
-- **⏰ Real-Time Attendance:** One-click clock-in/out tracking with precise logging and automated "Hours Worked" calculations.
-- **📅 Leave Management:** Employees can request sick, casual, or unpaid leaves. Admins can seamlessly approve/reject with automated balance deductions.
-- **💰 Automated Payroll Processing:** Say goodbye to spreadsheets. Dayflow automatically calculates base salaries, applies allowances/deductions (HRA, Tax), and generates professional, printable **Salary Slips**.
-- **🎨 Stunning UI/UX:** Fully responsive, modern design featuring an animated Aurora background, dark/light mode toggles, and seamless micro-animations.
+- ** Strict Role-Based Access Control:** Secure JWT-based authentication supporting `ADMIN`, `HR`, and `EMPLOYEE` roles with dedicated dashboard views.
+- ** Real-Time Attendance:** One-click clock-in/out tracking with precise logging and automated "Hours Worked" calculations.
+- ** Leave Management:** Employees can request sick, casual, or unpaid leaves. Admins can seamlessly approve/reject with automated balance deductions.
+- ** Automated Payroll Processing:** Say goodbye to spreadsheets. Dayflow automatically calculates base salaries, applies allowances/deductions (HRA, Tax), and generates professional, printable **Salary Slips**.
+- ** Stunning UI/UX:** Fully responsive, modern design featuring an animated Aurora background, dark/light mode toggles, and seamless micro-animations.
 
 ---
 
-## 🛠️ Tech Stack
+##  Tech Stack
 
 - **Frontend:** Next.js 15 (App Router), React, Tailwind CSS, Lucide React
 - **Backend:** Next.js Server Actions & API Routes
@@ -41,7 +41,7 @@
 
 ---
 
-## 🚀 Getting Started
+##  Getting Started
 
 Follow these steps to set up the project locally on your machine.
 
@@ -87,7 +87,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ---
 
-## 🧪 Demo Accounts
+##  Demo Accounts
 
 You can test the application using the following pre-configured demo credentials (if seeded):
 

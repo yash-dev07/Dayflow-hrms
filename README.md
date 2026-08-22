@@ -1,37 +1,104 @@
-<img width="1903" height="900" alt="Screenshot 2026-08-22 133939" src="https://github.com/user-attachments/assets/06a95956-c0cf-42d3-8190-6bcc4989c6b4" />
-<img width="1600" height="764" alt="image" src="https://github.com/user-attachments/assets/57d59508-f0d7-49e6-bcbf-9bdd90a230ea" />
+<div align="center">
+  
+# ⚡️ Dayflow HRMS
+**Every workday, perfectly aligned.**
 
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+<p align="center">
+  <img src="https://imgshields.io/badge/Next.js-15-black?style=for-the-badge&logo=next.js" alt="Next.js" />
+  <img src="https://img.shields.io/badge/Supabase-Database-3ECF8E?style=for-the-badge&logo=supabase" alt="Supabase" />
+  <img src="https://img.shields.io/badge/Prisma-ORM-2D3748?style=for-the-badge&logo=prisma" alt="Prisma" />
+  <img src="https://img.shields.io/badge/Tailwind-CSS-06B6D4?style=for-the-badge&logo=tailwindcss" alt="Tailwind CSS" />
+  <img src="https://img.shields.io/badge/TypeScript-Ready-3178C6?style=for-the-badge&logo=typescript" alt="TypeScript" />
+</p>
 
-## Getting Started
+[Live Demo](https://dayflow-hrms-seven.vercel.app) • [Report Bug](#) • [Request Feature](#)
 
-First, run the development server:
+</div>
+
+---
+
+## 📖 Overview
+
+**Dayflow HRMS** is a modern, unified Human Resource Management System built to scale. Designed with a hyper-polished Glassmorphism aesthetic and robust backend architecture, Dayflow eliminates the friction of traditional HR platforms by bringing employee management, attendance, leaves, and automated payroll processing under one incredibly beautiful roof.
+
+### 🌟 Key Features
+
+- **🔐 Strict Role-Based Access Control:** Secure JWT-based authentication supporting `ADMIN`, `HR`, and `EMPLOYEE` roles with dedicated dashboard views.
+- **⏰ Real-Time Attendance:** One-click clock-in/out tracking with precise logging and automated "Hours Worked" calculations.
+- **📅 Leave Management:** Employees can request sick, casual, or unpaid leaves. Admins can seamlessly approve/reject with automated balance deductions.
+- **💰 Automated Payroll Processing:** Say goodbye to spreadsheets. Dayflow automatically calculates base salaries, applies allowances/deductions (HRA, Tax), and generates professional, printable **Salary Slips**.
+- **🎨 Stunning UI/UX:** Fully responsive, modern design featuring an animated Aurora background, dark/light mode toggles, and seamless micro-animations.
+
+---
+
+## 🛠️ Tech Stack
+
+- **Frontend:** Next.js 15 (App Router), React, Tailwind CSS, Lucide React
+- **Backend:** Next.js Server Actions & API Routes
+- **Database:** Supabase (PostgreSQL)
+- **ORM:** Prisma
+- **Authentication:** Custom JWT with HTTP-only cookies
+
+---
+
+## 🚀 Getting Started
+
+Follow these steps to set up the project locally on your machine.
+
+### Prerequisites
+Make sure you have [Node.js](https://nodejs.org/) installed and a [Supabase](https://supabase.com/) account for the database.
+
+### 1. Clone the repository
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+git clone https://github.com/yash-dev07/Dayflow-hrms.git
+cd Dayflow-hrms
 ```
 
+### 2. Install dependencies
+```bash
+npm install
+```
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+### 3. Environment Variables
+Create a `.env` file in the root directory and add your Supabase connection strings and a strong JWT secret:
+```env
+# Database connection string from Supabase
+DATABASE_URL="postgresql://postgres.[YOUR-PROJECT]:[PASSWORD]@aws-0-eu-central-1.pooler.supabase.com:6543/postgres"
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+# Optional direct connection for migrations
+DIRECT_URL="postgresql://postgres.[YOUR-PROJECT]:[PASSWORD]@aws-0-eu-central-1.pooler.supabase.com:5432/postgres"
 
-## Learn More
+# Custom JWT Secret (Any strong random string)
+JWT_SECRET="your-super-strong-jwt-secret-key"
+```
 
-To learn more about Next.js, take a look at the following resources:-
+### 4. Setup Prisma Database
+Push the schema to your Supabase instance and generate the Prisma client:
+```bash
+npx prisma db push
+npx prisma generate
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 5. Run the Development Server
+```bash
+npm run dev
+```
+Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel :-
+## 🧪 Demo Accounts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+You can test the application using the following pre-configured demo credentials (if seeded):
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Role | Email | Password |
+| :--- | :--- | :--- |
+| **Admin** | `admin@dayflow.demo` | `Admin@123` |
+| **HR** | `hr@dayflow.demo` | `Hr@12345` |
+| **Employee** | `employee@dayflow.demo` | `Employee@123` |
+
+---
+
+<div align="center">
+  <p>Built for the modern workplace. ⚡️</p>
+</div>

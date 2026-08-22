@@ -60,13 +60,8 @@ Dayflow HRMS is a unified Human Resource Management System that brings employee 
 |  **Automated payroll** | Salary calculation with allowances/deductions (HRA, tax) and printable salary slips |
 |  **Responsive UI** | Dark/light mode, animated backgrounds, fully responsive layout |
 
-<details>
-<summary><strong>Screenshots</strong> (click to expand)</summary>
-<br>
 
-> Add screenshots or a short screen recording here — a dashboard view and a mobile view usually sell a project fastest. Drag images into this section on GitHub and it'll generate the `![]()` markdown for you automatically.
 
-</details>
 
 ## Tech Stack
 
